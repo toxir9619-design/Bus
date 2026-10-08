@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UzBus Live – shahar va respublika avtobuslari</title>
+<style>
+:root{--bg:#f3f6f8;--pn:#fff;--tx:#14202b;--mu:#64748b;--bd:#dbe2e8;--ac:#0b7a5b;--sea:#dcebf2;--land:#fbfaf1;--ln:#b7c3cc;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d1318;--pn:#151d24;--tx:#e6edf2;--mu:#8b9aa7;--bd:#26323c;--ac:#34d399;--sea:#101c25;--land:#1a252d;--ln:#3a4a57}}
+:root[data-theme=dark]{--bg:#0d1318;--pn:#151d24;--tx:#e6edf2;--mu:#8b9aa7;--bd:#26323c;--ac:#34d399;--sea:#101c25;--land:#1a252d;--ln:#3a4a57}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+#app{height:100%;display:grid;grid-template-rows:auto 1fr}
+header{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 12px;background:var(--pn);border-bottom:1px solid var(--bd)}
+h1{font-size:16px;margin:0}h1 small{font-weight:500;color:var(--ac);border:1px solid var(--ac);border-radius:6px;padding:0 5px;margin-left:6px;font-size:10px}
+.st{display:flex;gap:10px;flex-wrap:wrap;color:var(--mu);font-size:12px}.st b{color:var(--tx)}
+.ctl{margin-left:auto;display:flex;gap:6px;align-items:center}
+button,select,input{font:inherit;color:var(--tx);background:var(--pn);border:1px solid var(--bd);border-radius:8px;padding:5px 9px}
+button{cursor:pointer}button:hover{border-color:var(--ac)}button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+main{display:grid;grid-template-columns:360px 1fr;min-height:0}
+aside{display:flex;flex-direction:column;min-height:0;background:var(--pn);border-right:1px solid var(--bd)}
+.tabs{display:flex;border-bottom:1px solid var(--bd)}.tabs button{flex:1;border:0;border-radius:0;background:none;padding:9px}
+.tabs button.on{color:var(--ac);background:none;border-bottom:2px solid var(--ac)}
+.tp{display:none;flex-direction:column;min-height:0;flex:1}.tp.on{display:flex}
+.pad{padding:8px 10px}.sc{overflow:auto;flex:1;padding:0 10px 10px}
+#q{width:100%;margin-bottom:6px}
+.chips{display:flex;gap:5px;flex-wrap:wrap}.chip{padding:2px 8px;font-size:12px;border-radius:99px}
+.row{display:flex;gap:8px;align-items:center;padding:8px;border:1px solid var(--bd);border-radius:10px;margin-top:6px;cursor:pointer}
+.row.sel{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
+.dot{min-width:38px;height:24px;padding:0 5px;border-radius:7px;color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center}
+.row .m{flex:1;min-width:0}.row .m div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mu{color:var(--mu);font-size:12px}.star{border:0;background:none;font-size:17px;padding:0 4px;color:var(--mu)}.star.f{color:#f59e0b}
+.ok{color:#10b981}.no{color:#ef4444}
+#mapw{position:relative;min-height:0;background:var(--sea);overflow:hidden}
+#map{width:100%;height:100%;touch-action:none;cursor:grab;display:block}
+.zb{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}.zb button{width:38px;height:38px;font-size:18px;padding:0}
+#det{position:absolute;left:10px;right:10px;bottom:10px;max-width:400px;background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;display:none;max-height:65%;overflow:auto;box-shadow:0 6px 24px #0003}
+#cam,#camimg{width:100%;border-radius:8px;background:#000;margin:6px 0;display:block}
+.bar{height:6px;background:var(--bd);border-radius:9px;overflow:hidden;margin:3px 0 8px}.bar i{display:block;height:100%}
+.tl{display:flex;gap:8px;font-size:12px;padding:1px 0}.tl.p{color:var(--mu);text-decoration:line-through}
+.note{font-size:11px;color:var(--mu);padding:8px 10px;border-top:1px solid var(--bd)}
+#gate{position:fixed;inset:0;z-index:99;background:#000c;display:flex;align-items:center;justify-content:center;padding:20px;text-align:center}
+#gate>div{background:var(--pn);padding:22px;border-radius:14px;max-width:400px}
+svg text{fill:var(--tx);font-size:calc(10px / var(--k,1));paint-order:stroke;stroke:var(--land);stroke-width:calc(3px / var(--k,1));pointer-events:none}
+.bus circle{r:calc(8px / var(--k,1));stroke:#fff;stroke-width:calc(1.5px / var(--k,1));cursor:pointer}
+.bus text{fill:#fff;stroke:none;font-size:calc(7px / var(--k,1));font-weight:700;text-anchor:middle}
+.stp{r:calc(3.5px / var(--k,1));fill:var(--pn);stroke:var(--tx);stroke-width:calc(1.2px / var(--k,1))}
+.rl{fill:none;stroke-width:calc(2.5px / var(--k,1));stroke-linecap:round}
+#me circle{r:calc(6px / var(--k,1));fill:#2563eb;stroke:#fff;stroke-width:calc(2px / var(--k,1))}#me circle.a{fill:#2563eb33;stroke:#2563eb;stroke-width:calc(1px / var(--k,1))}
+@media(max-width:820px){main{grid-template-columns:1fr;grid-template-rows:50% 50%}#mapw{order:-1}aside{border-right:0;border-top:1px solid var(--bd)}#det{max-height:75%}}
+</style></head><body><div id="app">
+<header><h1>🚌 UzBus Live<small>DEMO</small></h1>
+<div class="st"><span>Avtobus: <b id="s1">0</b></span><span>Yo'lda: <b id="s2">0</b></span><span>O'rt.: <b id="s4">0</b> km/s</span><span>🕒 <b id="clk">--:--</b></span></div>
+<div class="ctl"><button id="mc" class="on">Shahar</button><button id="mr">Respublika</button><select id="mult" title="Tezlik"><option value="1">1× jonli</option><option value="10">10×</option><option value="60">60×</option></select><button id="pp">⏸</button><button id="th">🌓</button></div></header>
+<main><aside>
+<div class="tabs"><button class="on" data-t="m">Men</button><button data-t="b">Avtobuslar</button><button data-t="r">Yo'nalishlar</button></div>
+<div class="tp on" id="tp-m"><div class="sc" id="pm" style="padding-top:8px"></div></div>
+<div class="tp" id="tp-b"><div class="pad"><input id="q" placeholder="Yo'nalish raqami (18, 28…), shahar, davlat raqami"><div class="chips" id="chips"></div></div><div class="sc" id="blist"></div></div>
+<div class="tp" id="tp-r"><div class="sc" id="rlist"></div></div>
+<div class="note">Demo: avtobuslar jadval asosida simulyatsiya qilinadi (hamma foydalanuvchida bir xil vaqt bo'yicha). Yo'nalish raqamlari va bekatlar sxematik/namuna — haqiqiy GTFS/GPS ulanganda almashtiriladi.</div>
+</aside>
+<section id="mapw"><svg id="map" viewBox="0 0 720 460"><g id="vp"><path id="out" fill="var(--land)" stroke="var(--ln)" stroke-width="1.5"/></g></svg>
+<div class="zb"><button id="zi">+</button><button id="zo">−</button><button id="zr">⌖</button><button id="cm" title="Men">📍</button></div>
+<div id="det"><div id="dh"></div><canvas id="cam" width="320" height="140"></canvas><img id="camimg" alt="" style="display:none"><div id="dinfo"></div></div></section></main></div>
+<div id="gate"><div><h2 style="margin:0 0 8px">📍 Joylashuvni yoqing</h2><p id="gm" class="mu">Eng yaqin bekat va avtobuslar yetib kelish vaqtini ko'rsatish uchun joylashuv kerak.</p><button id="gb" class="on" style="padding:10px 16px">Joylashuvni yoqish</button></div></div>
+<script>
+"use strict";
+const $=s=>document.querySelector(s),NS='http://www.w3.org/2000/svg';
+const S=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const CAMS={}; // haqiqiy kamera: {"01 A 123 BC":"https://.../stream.mjpg"} yoki {busId:"url"}
+let seed=11;const rnd=()=>(seed=seed*16807%2147483647)/2147483647;
+const hv=(a,b,c,d)=>{const r=Math.PI/180,x=Math.sin((c-a)*r/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;return 12742*Math.asin(Math.sqrt(x))};
+const CT={tsh:['Toshkent',69.24,41.30],gul:['Guliston',68.78,40.49],jiz:['Jizzax',67.84,40.12],sam:['Samarqand',66.96,39.65],nav:['Navoiy',65.38,40.10],bux:['Buxoro',64.42,39.77],qar:['Qarshi',65.79,38.86],ter:['Termiz',67.28,37.22],urg:['Urganch',60.63,41.55],xiv:['Xiva',60.36,41.38],nuk:['Nukus',59.61,42.46],and:['Andijon',72.34,40.78],far:["Farg'ona",71.78,40.38],qo:["Qo'qon",70.94,40.53],nam:['Namangan',71.67,41.0],shs:['Shahrisabz',66.83,39.06]};
+const CY={chs:['Chorsu',69.2355,41.3265],mst:['Mustaqillik maydoni',69.2795,41.3135],vkz:['Toshkent vokzali',69.286,41.2925],avp:['Aeroport',69.281,41.257],chl:['Chilonzor',69.204,41.274],sgl:['Sergeli',69.218,41.22],ynb:['Yunusobod',69.285,41.365],olo:['Oloy bozori',69.305,41.328],ttz:['TTZ',69.325,41.29],bsh:["Beshyog'och",69.2,41.315]};
+const REP=[['T1','Toshkent – Samarqand',['tsh','gul','jiz','sam'],'#e11d48'],['T2','Samarqand – Buxoro',['sam','nav','bux'],'#2563eb'],['T3','Buxoro – Urganch – Xiva',['bux','urg','xiv'],'#16a34a'],['T4',"Toshkent – Qo'qon – Andijon",['tsh','qo','far','and'],'#d97706'],['T5','Toshkent – Namangan',['tsh','nam'],'#9333ea'],['T6','Samarqand – Qarshi – Termiz',['sam','shs','qar','ter'],'#0891b2'],['T7','Urganch – Nukus',['urg','nuk'],'#db2777'],['T8','Namangan – Andijon',['nam','and'],'#65a30d']];
+const CIT=[['18','Chilonzor – Yunusobod',['chl','chs','mst','ynb'],'#e11d48'],['28','Sergeli – Oloy bozori',['sgl','vkz','mst','olo'],'#2563eb'],['45','Aeroport – TTZ',['avp','vkz','ttz'],'#16a34a'],['67','Chilonzor – Aeroport',['chl','vkz','avp'],'#d97706'],['81',"Beshyog'och – TTZ",['bsh','chs','olo','ttz'],'#9333ea'],['9','Yunusobod – Sergeli',['ynb','mst','vkz','sgl'],'#0891b2']];
+const OUT=[[56,44.9],[58.6,45.6],[61,44.4],[62,43.5],[64.5,43.6],[65.9,42.8],[66.1,42],[68,41.2],[69,41.5],[70,41.5],[71.2,42.7],[70.5,41.4],[71.6,41.4],[73.1,40.8],[71.8,40.1],[70.6,40.2],[69.4,40.7],[68.6,39.8],[67.4,39.5],[67.7,38.5],[67.9,37.1],[66.5,37.05],[66,38],[65.5,38.5],[64.2,38.9],[62.5,39.9],[61.3,41],[60,41.4],[58.5,42],[56,41.3]];
+const rpx=l=>(l-55.5)*39.26,rpy=l=>(45.7-l)*52,cpx=l=>(l-69.1)*1810+60,cpy=l=>(41.4-l)*2400;
+$('#out').setAttribute('d','M'+OUT.map(p=>rpx(p[0]).toFixed(1)+' '+rpy(p[1]).toFixed(1)).join('L')+'Z');
+const posAt=(r,d)=>{let i=1;while(i<r.sd.length-1&&d>r.sd[i])i++;const t=(d-r.sd[i-1])/(r.sd[i]-r.sd[i-1]||1),a=r.pts[i-1],b=r.pts[i];return{x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t}};
+function build(b){const r=b.r,n=r.st.length,g=r.ci?30:420,e=r.ci?120:900,dw=i=>(i==0||i==n-1)?e:g,tm=i=>(r.sd[i+1]-r.sd[i])*r.km/b.v*3600;let t=0;const Q=[];
+for(let i=0;i<n;i++){Q.push({t0:t,t1:t+dw(i),k:'d',i,dir:i==n-1?-1:1});t+=dw(i);if(i<n-1){Q.push({t0:t,t1:t+tm(i),k:'m',a:i,z:i+1,dir:1});t+=tm(i)}}
+for(let i=n-2;i>=0;i--){Q.push({t0:t,t1:t+tm(i),k:'m',a:i+1,z:i,dir:-1});t+=tm(i);if(i>0){Q.push({t0:t,t1:t+dw(i),k:'d',i,dir:-1});t+=dw(i)}}
+b.Q=Q;b.cy=t}
+const vp=$('#vp'),svg=$('#map'),ALL=[],B=ALL,M={};let sel=null;
+function mk(key,ST,px,py,km,ci,defs){const g=S('g',{class:'mg','data-m':key},vp),gr=S('g',{},g),gs=S('g',{},g),gb=S('g',{},g),P={};
+for(const i in ST)P[i]={id:i,n:ST[i][0],lon:ST[i][1],lat:ST[i][2],x:px(ST[i][1]),y:py(ST[i][2])};
+const R=defs.map(a=>{const r={id:a[0],name:a[1],st:a[2],c:a[3],km,ci,mode:key,pts:a[2].map(i=>P[i]),sd:[0]};for(let i=1;i<r.pts.length;i++)r.sd.push(r.sd[i-1]+Math.hypot(r.pts[i].x-r.pts[i-1].x,r.pts[i].y-r.pts[i-1].y));r.L=r.sd[r.sd.length-1];r.kmL=r.L*km;r.el=S('path',{class:'rl',stroke:r.c,d:'M'+r.pts.map(p=>p.x.toFixed(1)+' '+p.y.toFixed(1)).join('L')},gr);return r});
+for(const i in P){S('circle',{class:'stp',cx:P[i].x,cy:P[i].y},gs);S('text',{x:P[i].x+6,y:P[i].y-6},gs).textContent=P[i].n}
+const bs=[];R.forEach(r=>{const n=ci?Math.max(3,Math.round(r.kmL/3.2)):3+Math.round(r.L/100);for(let i=0;i<n;i++){const L=()=>String.fromCharCode(65+Math.floor(rnd()*26)),b={id:ALL.length,r,v:ci?18+rnd()*12:55+rnd()*30,spd:0,dw:0,d:0,dir:1,occ:50,
+plate:['01','10','20','30','40','50','60','70','80','85'][Math.floor(rnd()*10)]+' '+L()+' '+(100+Math.floor(rnd()*900))+' '+L()+L()};build(b);b.ph=b.cy*(i+rnd()*.6)/n;b.hay=(b.plate+' '+r.id+' '+r.name+' '+r.st.map(s=>P[s].n).join(' ')).toLowerCase();
+b.g=S('g',{class:'bus'},gb);S('circle',{fill:r.c},b.g);S('text',{y:2.5},b.g).textContent=r.id;b.g.addEventListener('click',()=>{if(!moved)pick(b.id)});ALL.push(b);bs.push(b)}});
+M[key]={P,R,bs,px,py,km,g}}
+mk('rep',CT,rpx,rpy,111/52*1.15,0,REP);mk('city',CY,cpx,cpy,111/2400*1.25,1,CIT);
+const meG=S('g',{id:'me'},vp);const meA=S('circle',{class:'a'},meG),meD=S('circle',{},meG);meG.style.display='none';
+let mode='city',cur=M.city,rf=null,follow=false,tab='m',paused=false,me=null,near=[],myStop=null,chosen=false,onlyFav=false,fav=new Set(),down=false,moved=false;
+try{fav=new Set(JSON.parse(localStorage.getItem('uzbus-fav')||'[]'))}catch(e){}
+const saveFav=()=>{try{localStorage.setItem('uzbus-fav',JSON.stringify([...fav]))}catch(e){}};
+// ---- map view
+const v={k:1,x:0,y:0},applyV=()=>{vp.setAttribute('transform',`translate(${v.x} ${v.y}) scale(${v.k})`);svg.style.setProperty('--k',v.k)};
+const center=(p,k)=>{v.k=k;v.x=360-p.x*k;v.y=230-p.y*k;applyV()};
+function fit(){const ps=Object.values(cur.P),xs=ps.map(p=>p.x),ys=ps.map(p=>p.y),x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);v.k=Math.min(8,.85*Math.min(720/(x1-x0||1),460/(y1-y0||1)));v.x=360-(x0+x1)/2*v.k;v.y=230-(y0+y1)/2*v.k;applyV()}
+const zoomAt=(f,cx,cy)=>{const nk=Math.min(30,Math.max(.7,v.k*f));f=nk/v.k;v.x=cx-(cx-v.x)*f;v.y=cy-(cy-v.y)*f;v.k=nk;applyV()};
+const svgPt=e=>{const m=svg.getScreenCTM().inverse();return{x:e.clientX*m.a+m.e,y:e.clientY*m.d+m.f,s:m.a}};
+svg.addEventListener('wheel',e=>{e.preventDefault();const p=svgPt(e);zoomAt(e.deltaY<0?1.2:1/1.2,p.x,p.y)},{passive:false});
+let drag=null;svg.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};moved=false;follow=false});
+addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>4)moved=true;if(moved){const s=svgPt(e).s;v.x+=dx*s;v.y+=dy*s;drag={x:e.clientX,y:e.clientY};applyV()}});
+addEventListener('pointerup',()=>{drag=null;setTimeout(()=>moved=false,0)});
+$('#zi').onclick=()=>zoomAt(1.5,360,230);$('#zo').onclick=()=>zoomAt(1/1.5,360,230);$('#zr').onclick=fit;$('#cm').onclick=()=>{if(me){follow=false;center(cur.mp,Math.max(v.k,3))}};
+function setMode(m){mode=m;cur=M[m];sel=null;rf=null;follow=false;chosen=false;myStop=null;for(const k in M)M[k].g.style.display=k===m?'':'none';$('#out').style.display=m==='rep'?'':'none';$('#mc').classList.toggle('on',m==='city');$('#mr').classList.toggle('on',m==='rep');fit();updMe();chips();renderAll()}
+$('#mc').onclick=()=>setMode('city');$('#mr').onclick=()=>setMode('rep');
+// ---- time / sim
+let simNow=Date.now()/1000,last=performance.now(),mult=1;
+const hm=t=>{const d=new Date((simNow+t)*1000);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+const fm=t=>t<30?'Hozir':t<5400?Math.round(t/60)+' daq':(t/3600).toFixed(1)+' soat';
+const fd=k=>k<1?Math.round(k*1000)+' m':k.toFixed(1)+' km';
+function upd(b){const T=((simNow+b.ph)%b.cy+b.cy)%b.cy,r=b.r;let s=b.Q[0];for(const x of b.Q)if(T<x.t1){s=x;break}
+if(s.k==='m'){b.d=r.sd[s.a]+(r.sd[s.z]-r.sd[s.a])*(T-s.t0)/(s.t1-s.t0);b.spd=b.v;b.dw=0}else{b.d=r.sd[s.i];b.spd=0;b.dw=s.t1-T;b.stp=s.i}
+b.dir=s.dir;b.occ=Math.round(30+45*Math.sin(simNow/900+b.id*1.7)**2);b.p=posAt(r,b.d)}
+const etaTo=(b,j)=>{const T=((simNow+b.ph)%b.cy+b.cy)%b.cy;let best=1e9,dir=1;for(const s of b.Q)if(s.k==='d'&&s.i===j){let d=s.t0-T;if(T>=s.t0&&T<s.t1)d=0;else if(d<0)d+=b.cy;if(d<best){best=d;dir=s.dir}}return{dt:best,dir}};
+const nxt=b=>{const s=b.r.sd,n=s.length;if(b.dir>0){for(let i=0;i<n;i++)if(s[i]>b.d+.01)return i;return n-1}for(let i=n-1;i>=0;i--)if(s[i]<b.d-.01)return i;return 0};
+const head=(b,dir)=>b.r.pts[(dir??b.dir)>0?b.r.pts.length-1:0].n;
+function draw(){let mv=0,sp=0;for(const b of cur.bs){upd(b);b.g.setAttribute('transform',`translate(${b.p.x.toFixed(2)} ${b.p.y.toFixed(2)})`);b.g.style.opacity=(rf&&rf!==b.r.id)?.15:1;b.g.firstChild.style.stroke=sel===b.id?'#facc15':'';if(b.spd){mv++;sp+=b.spd}}
+cur.R.forEach(r=>r.el.style.opacity=(!rf||rf===r.id)?.9:.1);
+if(follow&&sel!=null){const p=B[sel].p;v.x=360-p.x*v.k;v.y=230-p.y*v.k;applyV()}
+$('#s1').textContent=cur.bs.length;$('#s2').textContent=mv;$('#s4').textContent=mv?Math.round(sp/mv):0;$('#clk').textContent=hm(0)}
+// ---- geolocation (majburiy)
+const gate=(m,btn)=>{$('#gate').style.display='flex';$('#gm').textContent=m;$('#gb').textContent=btn||'Qayta tekshirish'};
+let wid=null;
+function startGeo(){if(!navigator.geolocation){gate('Brauzeringiz joylashuvni qo\'llab-quvvatlamaydi. Boshqa brauzerdan (Chrome/Safari) foydalaning.');return}
+if(wid!=null)try{navigator.geolocation.clearWatch(wid)}catch(e){}
+wid=navigator.geolocation.watchPosition(okGeo,errGeo,{enableHighAccuracy:true,maximumAge:4000,timeout:25000})}
+function okGeo(p){const first=!me;me={lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy||50};$('#gate').style.display='none';
+if(first){const m=hv(me.lat,me.lon,41.30,69.24)<60?'city':'rep';setMode(m);if(near[0]&&near[0].km<5){center(cur.mp,3)}}else{updMe();renderMe()}}
+function errGeo(e){if(e.code===1)gate('Joylashuv ruxsati o\'chirilgan. Brauzer manzil satridagi 🔒 belgisi → "Joylashuv" → "Ruxsat berish" ni tanlang, so\'ng "Qayta tekshirish"ni bosing.','Qayta tekshirish');else if(!me)gate('Joylashuvni aniqlab bo\'lmadi (GPS/internetni tekshiring). Tizim avtomatik qayta urinadi.','Qayta urinish')}
+$('#gb').onclick=startGeo;
+try{navigator.permissions.query({name:'geolocation'}).then(s=>{s.onchange=()=>{if(s.state!=='denied')startGeo()}})}catch(e){}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&(!me||$('#gate').style.display!=='none'))startGeo()});
+function updMe(){if(!me){meG.style.display='none';return}meG.style.display='';const p={x:cur.px(me.lon),y:cur.py(me.lat)};cur.mp=p;meD.setAttribute('cx',p.x);meD.setAttribute('cy',p.y);meA.setAttribute('cx',p.x);meA.setAttribute('cy',p.y);meA.setAttribute('r',Math.max(6,me.acc/1000/cur.km));
+near=Object.values(cur.P).map(s=>({p:s,km:hv(me.lat,me.lon,s.lat,s.lon)})).sort((a,b)=>a.km-b.km).slice(0,4);if(!chosen||!myStop)myStop=near[0].p.id}
+// ---- UI
+addEventListener('pointerdown',()=>down=true);addEventListener('pointerup',()=>setTimeout(()=>down=false,60));addEventListener('pointercancel',()=>down=false);
+function pick(id){const b=B[id];if(b.r.mode!==mode)setMode(b.r.mode);sel=id;follow=false;upd(b);center(b.p,Math.max(v.k,3));renderDet(1);renderList()}
+function renderMe(){if(down||tab!=='m')return;if(!me){$('#pm').innerHTML='<div class="mu">Joylashuv kutilmoqda…</div>';return}
+const sp=cur.P[myStop],dk=near.find(n=>n.p.id===myStop)?.km??hv(me.lat,me.lon,sp.lat,sp.lon),walk=dk*1000/1.3;
+let L=[];for(const b of cur.bs){const j=b.r.st.indexOf(myStop);if(j<0)continue;const e=etaTo(b,j);L.push({b,e})}L.sort((a,b)=>a.e.dt-b.e.dt);
+$('#pm').innerHTML=`<div class="mu">📍 Aniqlik ±${Math.round(me.acc)} m · avtomatik yangilanadi</div><div class="mu" style="margin:6px 0">Yaqin bekatlar (${mode==='city'?'Toshkent shahri':'respublika'}):</div><div class="chips">${near.map(n=>`<button class="chip ${myStop===n.p.id?'on':''}" data-ns="${n.p.id}">${esc(n.p.n)} · ${fd(n.km)}</button>`).join('')}</div>
+<div style="margin:10px 0 2px"><b>${esc(sp.n)}</b> <span class="mu">· piyoda ~${Math.max(1,Math.round(walk/60))} daq</span></div>`+
+(dk>40?'<div class="mu no">Siz bu rejim hududidan uzoqdasiz — yuqoridan "Respublika"/"Shahar"ni almashtiring.</div>':'')+
+L.slice(0,12).map(({b,e})=>`<div class="row" data-id="${b.id}"><div class="dot" style="background:${b.r.c}">${b.r.id}</div><div class="m"><div><b>→ ${esc(head(b,e.dir))}</b></div><div class="mu">${esc(b.plate)} · ${esc(b.r.name)}</div><div class="mu ${walk<e.dt?'ok':'no'}">${walk<e.dt?'✓ ulgurasiz':'⚠ piyoda ulgurmaysiz'}</div></div><div style="text-align:right"><b style="font-size:16px">${fm(e.dt)}</b><div class="mu">${hm(e.dt)}</div></div></div>`).join('')||'<div class="mu">Bu bekatga avtobus yo\'q</div>'}
+$('#pm').onclick=e=>{const n=e.target.closest('[data-ns]');if(n){myStop=n.dataset.ns;chosen=true;renderMe();return}const r=e.target.closest('[data-id]');if(r)pick(+r.dataset.id)};
+function chips(){$('#chips').innerHTML=[['','Hammasi'],...cur.R.map(r=>[r.id,r.id])].map(([id,t])=>`<button class="chip ${(rf||'')===id?'on':''}" data-r="${id}">${t}</button>`).join('')+`<button class="chip ${onlyFav?'on':''}" data-f="1">★</button>`}
+$('#chips').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.f)onlyFav=!onlyFav;else rf=b.dataset.r||null;chips();renderList();draw()};
+function renderList(){if(down||tab!=='b')return;const q=$('#q').value.trim().toLowerCase();
+const L=cur.bs.filter(b=>(!rf||b.r.id===rf)&&(!onlyFav||fav.has(b.plate))&&(!q||b.r.id.toLowerCase()===q||b.hay.includes(q))).sort((a,b)=>a.r.id.localeCompare(b.r.id,0,{numeric:true})||a.id-b.id);
+$('#blist').innerHTML=L.slice(0,60).map(b=>{const i=nxt(b);return`<div class="row ${sel===b.id?'sel':''}" data-id="${b.id}"><div class="dot" style="background:${b.r.c}">${b.r.id}</div><div class="m"><div><b>→ ${esc(head(b))}</b></div><div class="mu">${esc(b.plate)} · ${b.spd?Math.round(b.spd)+' km/s':'bekatda'}</div><div class="mu">keyingi: ${esc(b.r.pts[i].n)} · ${fm(etaTo(b,i).dt)}</div></div><button class="star ${fav.has(b.plate)?'f':''}" data-s="${b.id}">★</button></div>`}).join('')+(L.length>60?`<div class="mu" style="padding:8px">…yana ${L.length-60} ta. Qidiruvni toraytiring.</div>`:'')||'<div class="mu" style="padding:14px">Hech narsa topilmadi</div>'}
+$('#blist').onclick=e=>{const s=e.target.closest('[data-s]');if(s){const p=B[+s.dataset.s].plate;fav.has(p)?fav.delete(p):fav.add(p);saveFav();renderList();renderDet();return}const r=e.target.closest('[data-id]');if(r)pick(+r.dataset.id)};
+$('#q').oninput=renderList;
+function renderRoutes(){if(down||tab!=='r')return;$('#rlist').innerHTML=cur.R.map(r=>`<div class="row ${rf===r.id?'sel':''}" data-rr="${r.id}"><div class="dot" style="background:${r.c}">${r.id}</div><div class="m"><div><b>${esc(r.name)}</b></div><div class="mu" style="white-space:normal">${r.st.map(i=>esc(cur.P[i].n)).join(' → ')}</div><div class="mu">${Math.round(r.kmL)} km · ${cur.bs.filter(b=>b.r===r).length} ta avtobus</div></div></div>`).join('')}
+$('#rlist').onclick=e=>{const r=e.target.closest('[data-rr]');if(!r)return;rf=rf===r.dataset.rr?null:r.dataset.rr;chips();renderRoutes();draw()};
+function renderDet(init){const d=$('#det');if(sel==null){d.style.display='none';return}if(down&&!init)return;const b=B[sel],r=b.r,ni=nxt(b),u=CAMS[b.plate]||CAMS[b.id];d.style.display='block';
+$('#cam').style.display=u?'none':'block';const im=$('#camimg');im.style.display=u?'block':'none';if(u&&im.dataset.u!==u){im.dataset.u=u;im.src=u}
+$('#dh').innerHTML=`<div style="display:flex;gap:8px;align-items:center"><div class="dot" style="background:${r.c}">${r.id}</div><div style="flex:1"><b>→ ${esc(head(b))}</b><div class="mu">${esc(b.plate)} · ${esc(r.name)}</div></div><button class="star ${fav.has(b.plate)?'f':''}" data-fv="1">★</button><button data-x="1">✕</button></div>`;
+$('#dinfo').innerHTML=`<div>${b.spd?'Yo\'lda · <b>'+Math.round(b.spd)+' km/s</b>':'Bekatda: '+esc(r.pts[b.stp].n)+' ('+Math.ceil(b.dw/60)+' daq)'}</div><div class="mu">To'lish: ${b.occ}%</div><div class="bar"><i style="width:${b.occ}%;background:${b.occ>70?'#ef4444':b.occ>50?'#f59e0b':'#10b981'}"></i></div>
+<div class="mu">Marshrut: ${Math.round(b.d*r.km)} / ${Math.round(r.kmL)} km</div><div class="bar"><i style="width:${b.d/r.L*100}%;background:${r.c}"></i></div>
+<div style="margin-bottom:6px"><button class="${follow?'on':''}" data-fo="1">🎯 Kuzatish</button></div>
+${r.st.map((id,i)=>{const ah=b.dir>0?r.sd[i]>b.d+.01:r.sd[i]<b.d-.01,at=!b.spd&&b.stp===i;return`<div class="tl ${!ah&&!at?'p':''}"><span style="width:56px">${at?'bekatda':ah?fm(etaTo(b,i).dt):'—'}</span><span>${i===ni&&ah?'▶ ':''}${esc(cur.P[id].n)}</span></div>`}).join('')}`}
+$('#det').onclick=e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.x){sel=null;follow=false;renderDet();renderList()}else if(t.dataset.fv){const p=B[sel].plate;fav.has(p)?fav.delete(p):fav.add(p);saveFav();renderDet(1);renderList()}else if(t.dataset.fo){follow=!follow;if(follow)v.k=Math.max(v.k,4);renderDet(1)}};
+function renderAll(){renderMe();renderList();renderRoutes();renderDet()}
+document.querySelector('.tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;tab=b.dataset.t;document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));['m','b','r'].forEach(t=>$('#tp-'+t).classList.toggle('on',t===tab));renderAll()};
+$('#pp').onclick=()=>{paused=!paused;$('#pp').textContent=paused?'▶':'⏸'};$('#mult').onchange=e=>mult=+e.target.value;
+$('#th').onclick=()=>{const d=document.documentElement,dk=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;d.dataset.theme=dk?'light':'dark';try{localStorage.setItem('uzbus-th',d.dataset.theme)}catch(e){}};
+try{const t=localStorage.getItem('uzbus-th');if(t)document.documentElement.dataset.theme=t}catch(e){}
+// ---- old kamera (simulyatsiya; haqiqiy oqim uchun CAMS)
+const cv=$('#cam'),cx=cv.getContext('2d');let cph=0,lc=performance.now();
+function cam(n){requestAnimationFrame(cam);const dt=Math.min(.1,(n-lc)/1000);lc=n;if(sel==null||document.hidden||cv.style.display==='none')return;try{const b=B[sel],w=320,h=140,hz=h*.4;if(b.spd>0)cph=(cph+b.spd*dt*.01*(mult>1?1:1))%1;
+let g=cx.createLinearGradient(0,0,0,hz);g.addColorStop(0,'#5b9bd5');g.addColorStop(1,'#cfe6f5');cx.fillStyle=g;cx.fillRect(0,0,w,hz);cx.fillStyle='#5f7a52';cx.fillRect(0,hz,w,h-hz);
+cx.fillStyle='#3b3f45';cx.beginPath();cx.moveTo(w/2-3,hz);cx.lineTo(w/2+3,hz);cx.lineTo(w*.9,h);cx.lineTo(w*.1,h);cx.fill();
+const zs=[0,1,2,3,4,5].map(i=>(i/6+cph)%1).sort((a,c)=>a-c);
+zs.forEach((z,i)=>{const z2=z*z,y=hz+(h-hz)*z2,ed=3+(w*.4-3)*z2,bw=10+60*z2,bh=8+80*z2;cx.fillStyle=i%2?'#8a8f98':'#a9a29a';cx.fillRect(w/2-ed-4-bw,y-bh,bw,bh);cx.fillStyle=i%2?'#a9a29a':'#8a8f98';cx.fillRect(w/2+ed+4,y-bh,bw,bh)});
+zs.forEach(z=>{if(z<.03)return;const z2=z*z,y=hz+(h-hz)*z2,dw=1+5*z2;cx.fillStyle='#fff';cx.fillRect(w/2-dw/2,y,dw,2+16*z2)});
+cx.fillStyle='#fff';cx.font='bold 13px system-ui';cx.textAlign='left';cx.fillText(Math.round(b.spd)+' km/s',8,18);cx.textAlign='right';cx.fillText('№ '+b.r.id,w-8,18);cx.textAlign='center';cx.font='10px system-ui';cx.fillText('SIM KAMERA',w/2,12);
+const i=nxt(b);cx.font='bold 12px system-ui';cx.fillText(b.spd?'→ '+b.r.pts[i].n+' · '+Math.round(Math.abs(b.r.sd[i]-b.d)*b.r.km*1000)+' m':'BEKATDA: '+b.r.pts[b.stp].n,w/2,h-8)}catch(e){}}
+requestAnimationFrame(cam);
+// ---- asosiy sikl
+let acc=0;
+setInterval(()=>{try{const n=performance.now(),dt=(n-last)/1000;last=n;if(!paused)simNow+=dt*mult;if(document.hidden)return;draw();acc+=dt;if(acc>=1.5){acc=0;renderAll()}}catch(e){console.error(e)}},250);
+addEventListener('error',()=>{});
+chips();setMode('city');gate('Eng yaqin bekat va avtobuslar yetib kelish vaqtini ko\'rsatish uchun joylashuv kerak. Pastdagi tugmani bosing va ruxsat bering.','Joylashuvni yoqish');startGeo();
+</script></body></html>
